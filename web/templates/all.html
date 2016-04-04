@@ -25,13 +25,29 @@
       $(document).ready(function(){
           $.getJSON("/data/all/{{device}}/{{points}}", function(data) {
             var options = {
-              xaxis: { mode: "time", timezone: "browser" },
+              xaxis: { mode: "time",
+              timezone: "browser",
+              timeformat: "%a, %d/%b/%y %H:%M:%S"
+              },
+              dayNames: ["du", "dl", "dm", "dc", "dj", "dv", "ds"]
+              monthNames: ["gen", "feb", "mar", "abr", "mai", "jun", "jul", "ago", "set", "oct", "nov", "des"]
               yaxes: [ 
                 { position: "left", tickFormatter: function(val, axis) { return val < axis.max ? val.toFixed(2) : "<b>Watts</b>";} }, 
                 { position: "right", tickFormatter: function(val, axis) { return val < axis.max ? val.toFixed(2) : "<b>Celsius</b>";} } ],
               selection: { mode: "x" },
-              legend: { noColumns: 2 },
-              grid: { hoverable: true }
+              legend: {
+              show: true
+              //If you want the legend to appear somewhere else in the DOM, you can specify "container" as a jQuery object/expression to put the legend table into. The "position" and "margin" etc. options will then be ignored. Note that Flot will overwrite the contents of the container.
+              noColumns: 3,
+              position: "nw",     // crec que molestarà menys a l'esquerra
+              backgroundColor: null,
+              backgroundOpacity: 0,
+              sorted: "ascending"},
+              
+              grid: { 
+                backgroundColor: rgb (255, 255, 255)              //per veure si el Genera PNG apareix amb fons blanc
+                // markings: array of markings or (fn: axes -> array of markings)
+                hoverable: true }
             };
 
             //succes - data loaded, now use plot:
@@ -74,11 +90,11 @@
             });  
 
             // Data
-            data[0]["lines"] = {show: true, fill: false};
+            data[0]["lines"] = {show: true, fill: false, steps: false };
 //            data[0]["points"] = {show: true};
-            data[1]["lines"] = {show: true, fill: false};
+            data[1]["lines"] = {show: true, fill: false, steps: false, color: rgb(255,0,0) };
             data[1]["yaxis"] = 2;
-            data[2]["lines"] = {show: true, fill: false};
+            data[2]["lines"] = {show: true, fill: false, steps: false, color: rgb(0,0,255) };
             data[2]["yaxis"] = 2;
 
             var plot = $.plot(plotarea,data,options);
@@ -88,6 +104,6 @@
 
 </script>       
 <div id="placeholder" style="width:1024px;height:500px;"></div>
-<a id="generate">Genera PDF</a>
+<a id="generate">Genera PNG</a>
 </body>
 </html>
